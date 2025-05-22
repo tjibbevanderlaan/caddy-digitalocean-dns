@@ -1,31 +1,17 @@
 version: 2
 updates:
-  # Maintain dependencies for GitHub Actions
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "friday"
-      time: "00:30"
-    target-branch: "dev"
-    assignees:
-      - "tjibbevanderlaan"
-    groups:
-      actions:
-        patterns:
-          - "*"
-
-  # Maintain version for Docker
+  # Verify the Dockerfile in root for new images
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "friday"
-      time: "00:30"
+      interval: "daily"
+    # Target  PR’s for branch dev
     target-branch: "dev"
+    commit-message:
+      prefix: "deps:"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "docker"
     assignees:
       - "tjibbevanderlaan"
-    groups:
-      docker:
-        patterns:
-          - "*"
