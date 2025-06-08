@@ -5,6 +5,10 @@ on:
     branches: [dev]
   workflow_dispatch:
 
+env:
+  IMAGE_NAME:      ${{ secrets.DOCKERHUB_USERNAME }}/caddy-digitalocean-dns
+  TARGET_PLATFORMS: linux/amd64,linux/arm64
+
 jobs:
   build-and-pr:
     runs-on: ubuntu-latest
@@ -12,6 +16,7 @@ jobs:
       contents: write        # allow committing changes and creating tags
       pull-requests: write   # allow opening/updating pull-requests
       packages: write        # allow pushing the Docker image
+
     steps:
       # 1. Check out the repository
       - uses: actions/checkout@v4
@@ -23,35 +28,28 @@ jobs:
           ver=$(grep -m1 -Po '(?<=FROM caddy:)[0-9]+\.[0-9]+\.[0-9]+' Dockerfile)
           echo "caddy_version=$ver" >> "$GITHUB_OUTPUT"
 
-      # 3. Enable multi-arch builds
+      # 3. Enable QEMU emulation for the requested platforms
       - uses: docker/setup-qemu-action@v3
-      - uses: docker/setup-buildx-action@v3
+        with:
+          platforms: ${{ env.TARGET_PLATFORMS }}
 
-      # 4. Authenticate with Docker Hub
+      # 4. Create a Buildx builder that targets the same platforms
+      - uses: docker/setup-buildx-action@v3
+        with:
+          platforms: ${{ env.TARGET_PLATFORMS }}
+
+      # 5. Authenticate with Docker Hub
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # 5. Build and push the image tagged :dev
+      # 6. Build and push the image tagged :dev for both platforms
       - name: Build & push :dev tag
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/caddy-digitalocean-dns:dev
-
-      # 6. Create (or update) the promotion PR from dev → main
-      - name: Create / update PR to main
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          title: "Promote Caddy v${{ steps.vars.outputs.caddy_version }} to main"
-          body: |
-            Automated pull request to promote **Caddy v${{ steps.vars.outputs.caddy_version }}**
-            from `dev` to `main`.
-          base: main
-          branch: dev           # source branch
-          draft: false
-          delete-branch: false
+          platforms: ${{ env.TARGET_PLATFORMS }}
+          tags: ${{ env.IMAGE_NAME }}:dev
