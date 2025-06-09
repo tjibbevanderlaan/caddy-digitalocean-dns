@@ -3,10 +3,12 @@ name: Build & push dev image + PR
 on:
   push:
     branches: [dev]
+    paths:
+      - 'Dockerfile'
   workflow_dispatch:
 
 env:
-  IMAGE_NAME:      ${{ secrets.DOCKERHUB_USERNAME }}/caddy-digitalocean-dns
+  IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/caddy-digitalocean-dns
   TARGET_PLATFORMS: linux/amd64,linux/arm64
 
 jobs:

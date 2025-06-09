@@ -3,9 +3,11 @@ name: Release & publish production image
 on:
   push:
     branches: [main]
+    paths:
+      - 'Dockerfile'
 
 env:
-  IMAGE_NAME:       ${{ secrets.DOCKERHUB_USERNAME }}d
+  IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/caddy-digitalocean-dns
   TARGET_PLATFORMS: linux/amd64,linux/arm64
 
 jobs:
