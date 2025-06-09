@@ -52,7 +52,7 @@ jobs:
           push: true
           platforms: ${{ env.TARGET_PLATFORMS }}
           tags: |
-            ${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.tag }}
+            ${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.caddy_version }}
             ${{ env.IMAGE_NAME }}:latest
 
       # 7. Create the GitHub release and tag
