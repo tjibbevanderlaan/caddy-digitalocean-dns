@@ -1,3 +1,6 @@
+> [!WARNING]
+> **This repository is archived due to a migration to a different cloud provider. Please contact me if you are interested in taking ownership.**
+
 # Caddy DigitalOcean DNS
 
 
@@ -6,7 +9,6 @@
 [![GitHub issues](https://img.shields.io/github/issues/tjibbevanderlaan/caddy-digitalocean-dns)](https://github.com/tjibbevanderlaan/caddy-digitalocean-dns/issues)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/tjibbevanderlaan/caddy-digitalocean-dns)](https://github.com/tjibbevanderlaan/caddy-digitalocean-dns/pulls)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/tjibbevanderlaan/caddy-digitalocean-dns)](https://github.com/tjibbevanderlaan/caddy-digitalocean-dns/releases)
-
 
 Custom docker image to include DigitalOcean plugin for successfully provisioning SSL certificates from Let's Encrypt.
 
